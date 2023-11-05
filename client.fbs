@@ -1,0 +1,27 @@
+namespace CrossParser;
+
+table Person {
+    name:string;
+    age:double;
+    weight:double;
+    gender:string;
+}
+
+table Group {
+    group_name:string;
+    avg_age:double;
+    avg_weight:double;
+    person_names:vector[string];
+}
+
+union ClientUnion {Person, Group}
+
+table Client {
+    client_elem:ClientUnion;
+}
+
+table ClientVec {
+    client_vec:vector[Client];
+}
+
+root_type ClientVec;
