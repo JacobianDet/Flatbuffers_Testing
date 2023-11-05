@@ -30,26 +30,28 @@ int main(int argc, char **argv) {
     auto root_client_vector = GetClientVec(buf);
     auto clients_vector = root_client_vector->client_vec();
     for (unsigned int i=0; i<clients_vector->size(); ++i) {
-        switch (clients_vector->get(i)->client_elem_type()) {
+        switch (clients_vector->Get(i)->client_elem_type()) {
             case ClientUnion_Person: {
-                auto person = clients_vector->get(i)->client_elem();
+                auto person = static_cast<const Person*>(clients_vector->Get(i)->client_elem());
                 std::cout << "Data of type Person. Output:\n";
-                std::cout << "{" << person->name()->c_str() << " ,"
-                          << person->age() << " ," << person->weight()
-                          << " ," << person->gender()->c_str()
+                std::cout << "{" << person->name()->c_str() << ", "
+                          << person->age() << ", " << person->weight()
+                          << ", " << person->gender()->c_str()
                           << "}\n";
                 break;
             }
             
             case ClientUnion_Group: {
-                auto group = clients_vector->get(i)->client_elem();
+                auto group = static_cast<const Group*>(clients_vector->Get(i)->client_elem());
                 std::cout << "Data of type Group. Output:\n";
                 std::cout << "{" << group->group_name()->c_str()
-                          << " ," << group->avg_age() << " ,"
-                          << group->avg_weight() << " ,{";
+                          << ", " << group->avg_age() << ", "
+                          << group->avg_weight() << ", {";
                 auto client_group_vec_names = group->person_names();
                 for (unsigned int j=0; j<client_group_vec_names->size(); ++j) {
-                    std::cout << client_group_vec_names->get(j)->c_str() << " ,";
+                    if (j) 
+                    std::cout << ", ";
+                    std::cout << client_group_vec_names->Get(j)->c_str();
                 }
                 std::cout << "}}\n";
                 break;

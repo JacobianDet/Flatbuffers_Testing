@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
     double client_group_avg_age = 24.5;
     double client_group_avg_weight = 66;
     std::vector<std::string> tmp_vec_names{"Ram", "Shyam", "Raghuveer"};
-    auto client_group_vec_names = builder.CreateVectorOfStrings(tmp_vec_names, tmp_vec_names.size());
+    auto client_group_vec_names = builder.CreateVectorOfStrings(tmp_vec_names);
 
     auto person = CreatePerson(builder, client_person_name, client_person_age, client_person_weight, client_person_gender);
     auto group = CreateGroup(builder, client_group_name, client_group_avg_age, client_group_avg_weight, client_group_vec_names);
@@ -39,14 +39,14 @@ int main(int argc, char **argv) {
     auto client_person = CreateClient(builder, ClientUnion_Person, person.Union());
     auto client_group = CreateClient(builder, ClientUnion_Group, group.Union());
 
-    std::vector<flatbuffers::Offset<Client>> tmp_vec_clients{clients_person, clients_group};
+    std::vector<flatbuffers::Offset<Client>> tmp_vec_clients{client_person, client_group};
     auto clients_vector = builder.CreateVector(tmp_vec_clients);
-    auto root_client_vector = CreateClientVec(clients_vector);
+    auto root_client_vector = CreateClientVec(builder, clients_vector);
 
-    builder.finish(root_client_vector);
+    builder.Finish(root_client_vector);
     uint8_t *buf = builder.GetBufferPointer();
     int size = builder.GetSize();
-    outfile.write(buf, size);
+    outfile.write(reinterpret_cast<const char*>(buf), size);
     outfile.close();
     return 0;
 }

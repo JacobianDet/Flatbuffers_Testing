@@ -11,7 +11,7 @@ table Group {
     group_name:string;
     avg_age:double;
     avg_weight:double;
-    person_names:vector[string];
+    person_names:[string];
 }
 
 union ClientUnion {Person, Group}
@@ -21,7 +21,7 @@ table Client {
 }
 
 table ClientVec {
-    client_vec:vector[Client];
+    client_vec:[Client];
 }
 
 root_type ClientVec;
